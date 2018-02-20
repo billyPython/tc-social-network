@@ -1,2 +1,2 @@
 # social-network
-REST API based social network in Django
+Django REST API based social network
