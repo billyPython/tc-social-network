@@ -24,7 +24,6 @@ class PostViewSet(ModelViewSet):
     """
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-    permission_classes = (AllowAny,)
 
     @detail_route(methods=['POST'], )
     def like(self, request, *args, **kwargs):
@@ -41,7 +40,7 @@ def signup(request, *args, **kwargs):
     serializer = SocialUserSerializer(data=request.data)
     if serializer.is_valid():
         SocialUser.objects.create_user(**serializer.validated_data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response("Signup success!", status=status.HTTP_201_CREATED)
     else:
         return Response(serializer._errors, status=status.HTTP_400_BAD_REQUEST)
 
