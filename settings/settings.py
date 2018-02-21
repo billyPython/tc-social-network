@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#User settings
+AUTH_USER_MODEL = 'social.SocialUser'
+DEFAULT_USER_TYPE_ALIAS = "GUEST"
 
 # Application definition
 
@@ -37,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'social',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'social.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
@@ -126,3 +132,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+        # 'dry_rest_permissions.generics.DRYPermissions',
+    ),
+    # 'DEFAULT_PAGINATION_CLASS': None,
+    # 'PAGE_SIZE': 10,
+}
+
+JWT_AUTH = {
+'JWT_SECRET_KEY': SECRET_KEY,
+'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}

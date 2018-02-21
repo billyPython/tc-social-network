@@ -1,17 +1,28 @@
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class User(models.Model):
-    first_name = models.CharField(max_length=24)
-    last_name = models.CharField(max_length=24)
-    email = models.EmailField()
+
+class SocialUser(AbstractUser, models.Model):
+
+    @property
+    def fullname(self):
+        return self.get_full_name()
+
+    def __unicode__(self):
+        return self.fullname
+
 
 class Post(models.Model):
-    user = models.ForeignKey(User, related_name="user_post")
+    user = models.ForeignKey(SocialUser, related_name="user_post")
 
-    title = models.TextField()
-    added = models.DateTimeField()
-    text = models.TextField(max_length=24)
+    title = models.TextField(unique=True)
+    added = models.DateTimeField(auto_created=True)
+    text = models.TextField()
 
-class Like(models.Model):
-    user = models.ForeignKey(User, related_name="user_post")
-    added = models.DateTimeField()
+    liked = models.IntegerField(default=0)
+    unliked = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.title
+
