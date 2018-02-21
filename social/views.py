@@ -40,8 +40,8 @@ class PostViewSet(ModelViewSet):
 def signup(request, *args, **kwargs):
     serializer = SocialUserSerializer(data=request.data)
     if serializer.is_valid():
-        user = SocialUser.objects.create_user(**serializer.validated_data)
-        return Response(user, status=status.HTTP_201_CREATED)
+        SocialUser.objects.create_user(**serializer.validated_data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer._errors, status=status.HTTP_400_BAD_REQUEST)
 
