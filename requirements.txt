@@ -1,6 +1,8 @@
 Django==1.11.9
+django-rest-auth==0.9.3
 djangorestframework==3.7.3
 djangorestframework-simplejwt==3.2.1
 psycopg2==2.7.3.2
 pytz==2018.3
 PyJWT==1.5.3
+six==1.11.0

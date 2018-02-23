@@ -17,7 +17,7 @@ class Post(models.Model):
     user = models.ForeignKey(SocialUser, related_name="user_post")
 
     title = models.TextField(unique=True)
-    added = models.DateTimeField(auto_created=True)
+    added = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
 
     liked = models.IntegerField(default=0)

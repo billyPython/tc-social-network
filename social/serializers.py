@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 from social.models import SocialUser, Post
 
 
-class SocialUserSerializer(serializers.ModelSerializer):
+class SignUpSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True,
         validators = [UniqueValidator(queryset=SocialUser.objects.all())]
@@ -16,6 +16,18 @@ class SocialUserSerializer(serializers.ModelSerializer):
 
     )
     password = serializers.CharField(max_length=128, required=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id',
+            'email',
+            'username',
+            'password'
+        )
+
+
+class SocialUserSerializer(serializers.ModelSerializer):
     fullname = serializers.SerializerMethodField('_get_full_name')
 
     def _get_full_name(self, obj):
@@ -24,16 +36,9 @@ class SocialUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-            'fullname',
-            'id',
-            'first_name',
-            'last_name',
-            'email',
-            'date_joined',
-            'last_login',
-            'username',
-            'password'
+            '__all__'
         )
+
 
 class PostSerializer(serializers.ModelSerializer):
 

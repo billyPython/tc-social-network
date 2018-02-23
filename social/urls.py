@@ -17,6 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views import generic
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+
 from social import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -30,17 +32,19 @@ router.register(r'posts', views.PostViewSet)
 
 urlpatterns = [
     # Model views
-    # url(r'^$', generic.RedirectView.as_view(url())),
     url(r'^api/', include(router.urls)),
-    # Signup/login functionality
+    # url(r'^$', generic.RedirectView.as_view(url())),
+    # Rest auth
+    url(r'^', include('rest_auth.urls')),
+    # Custom Signup/login functionality
     url(r'^sign-up/', views.signup, name="signup_user"),
-    url(r'^login/', views.login, name="login_user"),
+    # url(r'^login/', views.login, name="login_user"),
     # Admin
     url(r'^admin/', admin.site.urls),
     # Rest auth
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     # JWT endpoints
-    url(r'^api/auth/token/obtain/$', TokenObtainPairView.as_view()),
-    url(r'^api/auth/token/refresh/$', TokenRefreshView.as_view()),
-    url(r'^api/auth/token/verify/$', TokenVerifyView.as_view()),
+    url(r'^auth-jwt/', obtain_jwt_token),
+    url(r'^auth-jwt-refresh/', refresh_jwt_token),
+    url(r'^auth-jwt-verify/', verify_jwt_token),
 ]
