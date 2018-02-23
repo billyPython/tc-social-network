@@ -36,7 +36,18 @@ class SocialUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-            '__all__'
+            'id',
+            'fullname',
+            'first_name',
+            'last_name',
+            'last_login',
+            'username',
+            'email',
+            'is_superuser',
+            'is_staff',
+            'date_joined',
+            'user_permissions',
+            'groups',
         )
 
 
