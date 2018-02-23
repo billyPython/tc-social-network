@@ -14,7 +14,7 @@ from social.serializers import SocialUserSerializer, PostSerializer, SignUpSeria
 
 class UserViewSet(ModelViewSet):
     serializer_class = SocialUserSerializer
-    queryset = SocialUser.objects.all()
+    queryset = SocialUser.objects.all().order_by('last_login')
     permission_classes = (
         IsAuthenticated,
         UserIsOwner,
@@ -26,7 +26,7 @@ class PostViewSet(ModelViewSet):
         View where you can create, like and unlike post.
     """
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('added')
 
     @detail_route(methods=['POST'], )
     def like(self, request, *args, **kwargs):
