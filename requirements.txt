@@ -6,3 +6,8 @@ psycopg2==2.7.3.2
 pytz==2018.3
 PyJWT==1.5.3
 six==1.11.0
+pyhunter==0.3
+chardet==3.0.4
+idna==2.6
+urllib3==1.22
+certifi==2018.1.18

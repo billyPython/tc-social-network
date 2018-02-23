@@ -10,6 +10,7 @@ from rest_framework_jwt.utils import jwt_payload_handler, jwt_encode_handler
 from social.models import SocialUser, Post
 from social.permissions import UserIsOwner
 from social.serializers import SocialUserSerializer, PostSerializer, SignUpSerializer
+from social.utils import ehunter
 
 
 class UserViewSet(ModelViewSet):
@@ -47,8 +48,17 @@ class PostViewSet(ModelViewSet):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def signup(request, *args, **kwargs):
+    """
+        Custom view for registering user on social-network app,
+        by checking if their input is valid and is not missing.
+    """
     serializer = SignUpSerializer(data=request.data)
+
     if serializer.is_valid():
+        response = ehunter.email_verifier(serializer.validated_data.get("email"))
+        if response['result'] == 'undeliverable':
+            return Response('Email does not exist!',status=status.HTTP_400_BAD_REQUEST)
+
         SocialUser.objects.create_user(**serializer.validated_data)
         return Response("Signup success!", status=status.HTTP_201_CREATED)
     else:
@@ -57,7 +67,11 @@ def signup(request, *args, **kwargs):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request, *args, **kwargs):
+    """
+
+    """
     user = authenticate(username=request.data.get('username'), password=request.data.get('password'))
+
     if not user:
         return Response({"error": "Login failed. Incorrect username or password."}, status=HTTP_401_UNAUTHORIZED)
 
