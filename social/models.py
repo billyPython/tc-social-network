@@ -14,7 +14,7 @@ class SocialUser(AbstractUser, models.Model):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(SocialUser, related_name="user_post")
+    user = models.ForeignKey(SocialUser, related_name="posts")
 
     title = models.TextField(unique=True)
     added = models.DateTimeField(auto_now_add=True)

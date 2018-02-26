@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from datetime import timedelta
+
+import clearbit
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -151,6 +154,7 @@ REST_FRAMEWORK = {
     # 'PAGE_SIZE': 10,
 }
 
+# JWT conf
 REST_USE_JWT = True
 
 JWT_AUTH = {
@@ -161,4 +165,15 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
 }
 
-HUNTER_API_KEY = '238af370304363132c7345371b5e052e3a856979'
+#Clearbit
+clearbit.key = os.getenv('CLEARBIT_SECRET', 'sk_1d9a04a08f006b1c4f333f070fc1bc0d')
+CLEARBIT_PUBLIC = os.getenv('CLEARBIT_PUBLIC', 'pk_6d4f1fc73e112388f8e1c6fb20bb12d8')
+
+# Email Hunter
+HUNTER_API_KEY = os.getenv('HUNTER_API_KEY', '238af370304363132c7345371b5e052e3a856979')
+
+# SocialBot secret handshake
+BOT_SECRET_NAME = os.getenv('BOT_SECRET_NAME','botcuga')
+
+# Fixtures
+FIXTURE_DIRS = (BASE_DIR + '/social/fixtures/',)
