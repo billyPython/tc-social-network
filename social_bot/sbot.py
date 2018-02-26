@@ -18,7 +18,7 @@ class SocialBot(object):
 
     SIGN_UP_URL = 'http://localhost:8000/sign-up/'
     LOGIN_URL = 'http://localhost:8000/login/'
-    CREATE_POST_URL = 'http://localhost:8000/api/posts/'
+    GET_OR_CREATE_POST_URL = 'http://localhost:8000/api/posts/'
 
     PWD_GEN_CHARS = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()?"
 
@@ -40,9 +40,30 @@ class SocialBot(object):
     def _pw_gen(size=8, chars=string.ascii_letters + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
+    @staticmethod
+    def _all_posts_liked(posts):
+        num_of_posts = len(posts)
+        if len([post for post in posts if post['liked'] > 0]) == num_of_posts:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def _no_likes_check(posts, post_owner):
+        if [post for post in posts if (post['user'] == post_owner) and (post['liked'] <= 0)]:
+            return True
+        else:
+            return False
+
+    def _get_posts(self, user):
+        self.HEADERS['Authorization'] = 'Bearer ' + user['token']
+        response = requests.get(url=self.GET_OR_CREATE_POST_URL, headers=self.HEADERS)
+        return json.loads(response.content)
+
+
     def signup_users(self):
         """
-            Sign up random generated  and let signup view know that it is bot
+            Sign up random generated users/bots and let signup view know that it is a bot
         """
         self.signed_up_users = []
         number_of_users = self.json['number_of_users']
@@ -96,7 +117,11 @@ class SocialBot(object):
                     "text": "They see me botting :D"
                 }
 
-                response = requests.post(url=self.CREATE_POST_URL, data=json.dumps(payload), headers=self.HEADERS)
+                response = requests.post(
+                                url=self.GET_OR_CREATE_POST_URL,
+                                data=json.dumps(payload),
+                                headers=self.HEADERS
+                            )
 
                 if not response.status_code == status.HTTP_201_CREATED:
                     raise BotCreatePostException(response.content)
@@ -106,13 +131,28 @@ class SocialBot(object):
                 rand_posts -= 1
 
     def like_posts(self, post_id, user):
-        self.HEADERS['Authorization'] = user['token']
-        user['likes'] = 0
+        self.HEADERS['Authorization'] = 'Bearer '+ user['token']
         response = \
-            requests.post(url='http://localhost:8000/posts/{}/like'.format(post_id), headers=self.HEADERS)
+            requests.post(url='http://localhost:8000/api/posts/{}/like/'.format(post_id), headers=self.HEADERS)
         if not response.status_code == status.HTTP_201_CREATED:
             raise BotLikeException(response.content)
-        user['likes'] += 1
 
     def like_logic(self):
-        max_posts_user = self.logged_users
+        posting_users = sorted(self.logged_users, key=lambda user: len(user['posts']))
+        while True:
+            max_posts_user = posting_users.pop()
+            max_posts_user['posts_liked'] = []
+            posts = self._get_posts(max_posts_user)
+            if self._all_posts_liked(posts) or not posting_users:
+                return print("Bot finished playing around! :)")
+
+            while len(max_posts_user.get('posts_liked')) <= self.max_likes_per_user:
+                random_post = random.choice(posts)
+                if random_post['user'] != max_posts_user['user']['pk'] and \
+                   random_post['id'] not in max_posts_user['posts_liked'] and \
+                    self._no_likes_check(posts=posts, post_owner=random_post['user']):
+
+                    self.like_posts(random_post['id'], max_posts_user)
+                    max_posts_user['posts_liked'].append(random_post['id'])
+
+            pass

@@ -1,10 +1,8 @@
 import os
 
 from django.core.management.base import BaseCommand
-from rest_framework import request
 from rest_framework.utils import json
 
-from social.models import Post, SocialUser
 from social_bot.sbot import SocialBot
 
 
@@ -23,12 +21,6 @@ class Command(BaseCommand):
         bot.login_users()
         bot.create_posts()
 
-        posts = Post.objects.all()
-        users = SocialUser.objects.all()
+        # Craziness happens when you like someone :)
+        bot.like_logic()
 
-        while posts.filter(liked=0):
-            bot.like_logic()
-
-        # bot.like_posts()
-
-        pass
