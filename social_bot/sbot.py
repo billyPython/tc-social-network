@@ -3,7 +3,6 @@ import random
 import string
 
 import requests
-from copy import deepcopy
 from rest_framework import status
 from rest_framework.utils import json
 import username_generator
@@ -49,7 +48,6 @@ class SocialBot(object):
         else:
             return False
 
-    # @staticmethod
     def _radnom_posts(self, posts):
 
         while True:

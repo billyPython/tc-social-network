@@ -70,12 +70,12 @@ def signup(request, *args, **kwargs):
         if ehunter_response['result'] == 'undeliverable':
             return Response('Email does not exist!', status=status.HTTP_400_BAD_REQUEST)
 
-    clearbit_response = clearbit.Enrichment.find(email=data["email"], stream=True)
-    if clearbit_response:
-        data.update({
-                    "first_name": clearbit_response['person']['name']['givenName'],
-                    "last_name": clearbit_response['person']['name']['familyName'],
-                })
+        clearbit_response = clearbit.Enrichment.find(email=data["email"], stream=True)
+        if clearbit_response.get('person'):
+            data.update({
+                        "first_name": clearbit_response['person']['name']['givenName'],
+                        "last_name": clearbit_response['person']['name']['familyName'],
+                    })
 
     serializer = SignUpSerializer(data=data)
     if not serializer.is_valid():
@@ -83,7 +83,7 @@ def signup(request, *args, **kwargs):
 
     SocialUser.objects.create_user(**serializer.validated_data)
 
-    return Response("Signup success!", status=status.HTTP_201_CREATED)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

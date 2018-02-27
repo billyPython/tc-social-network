@@ -27,12 +27,12 @@ from rest_framework_simplejwt.views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'posts', views.PostViewSet)
+router.register(r'users', views.UserViewSet, base_name="users")
+router.register(r'posts', views.PostViewSet, base_name="posts")
 
 urlpatterns = [
     # Model views
-    url(r'^api/', include(router.urls)),
+    url(r'^api/', include(router.urls, namespace='api')),
     # url(r'^$', generic.RedirectView.as_view(url())),
     # Rest auth
     url(r'^', include('rest_auth.urls')),
@@ -44,7 +44,7 @@ urlpatterns = [
     # Rest auth
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
     # JWT endpoints
-    url(r'^auth-jwt/', obtain_jwt_token),
+    url(r'^auth-jwt/', obtain_jwt_token, name="token_auth"),
     url(r'^auth-jwt-refresh/', refresh_jwt_token),
     url(r'^auth-jwt-verify/', verify_jwt_token),
 ]
