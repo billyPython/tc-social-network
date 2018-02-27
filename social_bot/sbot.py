@@ -137,7 +137,7 @@ class SocialBot(object):
     def like_posts(self, post_id, user):
         self.HEADERS['Authorization'] = 'Bearer '+ user['token']
         response = \
-            requests.post(url='http://localhost:8000/api/posts/{}/like/'.format(post_id), headers=self.HEADERS)
+            requests.get(url='http://localhost:8000/api/posts/{}/like/'.format(post_id), headers=self.HEADERS)
         if not response.status_code == status.HTTP_201_CREATED:
             raise BotLikeException(response.content)
 

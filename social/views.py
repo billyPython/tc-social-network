@@ -39,7 +39,7 @@ class PostViewSet(ModelViewSet):
         request.data.update({"user": request.user.pk})
         return super(PostViewSet, self).create(request, *args, **kwargs)
 
-    @detail_route(methods=['POST'], )
+    @detail_route(methods=['GET'], )
     def like(self, request, *args, **kwargs):
         post = self.get_object()
         post.liked += 1
@@ -47,7 +47,7 @@ class PostViewSet(ModelViewSet):
 
         return Response(status=status.HTTP_201_CREATED)
 
-    @detail_route(methods=['POST'], )
+    @detail_route(methods=['GET'], )
     def unlike(self, request, *args, **kwargs):
         post = self.get_object()
         post.unliked += 1
