@@ -33,7 +33,6 @@ router.register(r'posts', views.PostViewSet, base_name="posts")
 urlpatterns = [
     # Model views
     url(r'^api/', include(router.urls, namespace='api')),
-    # url(r'^$', generic.RedirectView.as_view(url())),
     # Rest auth
     url(r'^', include('rest_auth.urls')),
     # Custom Signup/login functionality
