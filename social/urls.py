@@ -33,15 +33,20 @@ router.register(r'posts', views.PostViewSet, base_name="posts")
 urlpatterns = [
     # Model views
     url(r'^api/', include(router.urls, namespace='api')),
+
     # Rest auth
     url(r'^', include('rest_auth.urls')),
+
     # Custom Signup/login functionality
     url(r'^sign-up/', views.signup, name="signup_user"),
     # url(r'^login/', views.login, name="login_user"),
+
     # Admin
     url(r'^admin/', admin.site.urls),
+
     # Rest auth
     url(r'^api/auth/', include('rest_framework.urls', namespace='rest_framework')),
+
     # JWT endpoints
     url(r'^auth-jwt/', obtain_jwt_token, name="token_auth"),
     url(r'^auth-jwt-refresh/', refresh_jwt_token),

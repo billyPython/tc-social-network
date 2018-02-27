@@ -7,7 +7,8 @@ from rest_framework import status
 from rest_framework.utils import json
 import username_generator
 
-from social_bot.exceptions import BotLikeException, BotCreatePostException, BotLoginExcpetion, BotSignUpException
+from social_bot.exceptions import BotLikeException, BotCreatePostException, BotLoginExcpetion, BotSignUpException, \
+    BotNoInitialData
 
 
 class SocialBot(object):
@@ -28,8 +29,7 @@ class SocialBot(object):
         elif file_path:
             self.json = json.load(open(file_path,'r'))
         else:
-            # TODO: make custom exception
-            raise Exception
+            raise BotNoInitialData("You didn't set json data or path to json.")
 
         self.number_of_users = self.json['number_of_users'] if self.json['number_of_users'] else 1
         self.max_posts_per_user = self.json['max_posts_per_user'] if self.json['max_posts_per_user'] else 1
@@ -92,7 +92,7 @@ class SocialBot(object):
 
     def login_users(self):
         """
-            Login all singed up users and store them in "logged_users"
+            Login all singed up users and store them in 'logged_users'
         """
         self.logged_users = []
         for user in self.signed_up_users:
@@ -106,7 +106,7 @@ class SocialBot(object):
     def create_posts(self):
         """
             Create random number , no greater then max_posts_per_user, for every user. Every post will be
-            stored on logged_users data as "posts".
+            stored in logged_users data as "posts".
         """
         for user in self.logged_users:
 

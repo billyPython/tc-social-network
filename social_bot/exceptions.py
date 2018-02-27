@@ -10,3 +10,6 @@ class BotCreatePostException(Exception):
 
 class BotLikeException(Exception):
     pass
+
+class BotNoInitialData(Exception):
+    pass

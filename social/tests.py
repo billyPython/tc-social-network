@@ -57,6 +57,11 @@ class TestSocialViewSets(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_user_delete(self):
+        url = '/api/users/{}/'.format(self.user.pk)
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
     def test_create_post(self):
         url = reverse('api:posts-list')
         data = {
@@ -67,6 +72,11 @@ class TestSocialViewSets(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Post.objects.get(id=response.data['id']).title, data['title'])
         self.assertEqual(Post.objects.get(id=response.data['id']).text, data['text'])
+
+    def test_delete_post(self):
+        url = '/api/posts/{}/'.format(self.post.pk)
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_create_invalid_post(self):
         url = reverse('api:posts-list')
