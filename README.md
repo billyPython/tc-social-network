@@ -43,3 +43,4 @@ Endpoints:
 
 # Bot usage:
 - python manage.py bot --data json_file_path
+- there is example data in /social_bot/data/
