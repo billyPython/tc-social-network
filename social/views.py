@@ -4,6 +4,7 @@ from copy import deepcopy
 import clearbit
 from django.conf import settings
 from django.contrib.auth import authenticate
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.decorators import detail_route, api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -97,8 +98,10 @@ def login(request, *args, **kwargs):
     if not user:
         return Response({"error": "Login failed. Incorrect username or password."}, status=HTTP_401_UNAUTHORIZED)
 
+    user.last_login = timezone.now()
+    user.save()
     payload = jwt_payload_handler(user)
     jwt_token = jwt_encode_handler(payload)
 
-    return Response({"token": jwt_token, "user":user})
+    return Response({"token": jwt_token})
 
