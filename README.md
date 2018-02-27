@@ -27,11 +27,11 @@ Endpoints:
             payload_to_create={"title", title, "text": text}
             response serialized data
 
-        /api/posts/{id}/like
+        /api/posts/{id}/like/
         methods GET
         response 201
 
-        /api/posts/{id}/like
+        /api/posts/{id}/unlike/
         methods GET
         response 201
 
