@@ -6,6 +6,8 @@ from social.models import SocialUser, Post
 
 
 class SignUpSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
     username = serializers.CharField(
         required=True,
         validators = [UniqueValidator(queryset=SocialUser.objects.all())]
@@ -23,7 +25,9 @@ class SignUpSerializer(serializers.ModelSerializer):
             'id',
             'email',
             'username',
-            'password'
+            'password',
+            'first_name',
+            'last_name',
         )
 
 

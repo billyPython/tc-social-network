@@ -3,6 +3,7 @@ import random
 import string
 
 import requests
+from copy import deepcopy
 from rest_framework import status
 from rest_framework.utils import json
 import username_generator
@@ -48,18 +49,23 @@ class SocialBot(object):
         else:
             return False
 
-    @staticmethod
-    def _no_likes_check(posts, post_owner):
-        if [post for post in posts if (post['user'] == post_owner) and (post['liked'] <= 0)]:
-            return True
-        else:
-            return False
+    # @staticmethod
+    def _radnom_posts(self, posts):
+
+        while True:
+            try:
+                random_posts = random.sample(posts, self.max_likes_per_user)
+                break
+            except ValueError:
+                continue
+
+        for post in random_posts:
+                yield post
 
     def _get_posts(self, user):
         self.HEADERS['Authorization'] = 'Bearer ' + user['token']
         response = requests.get(url=self.GET_OR_CREATE_POST_URL, headers=self.HEADERS)
         return json.loads(response.content)
-
 
     def signup_users(self):
         """
@@ -140,19 +146,24 @@ class SocialBot(object):
     def like_logic(self):
         posting_users = sorted(self.logged_users, key=lambda user: len(user['posts']))
         while True:
-            max_posts_user = posting_users.pop()
-            max_posts_user['posts_liked'] = []
-            posts = self._get_posts(max_posts_user)
-            if self._all_posts_liked(posts) or not posting_users:
+            next_top_user = posting_users.pop()
+            next_top_user['posts_liked'] = []
+            posts = self._get_posts(next_top_user)
+
+            for post in self._radnom_posts(posts=posts):
+
+                if len(next_top_user.get('posts_liked')) == self.max_likes_per_user:
+                    break
+
+                if post['user'] != next_top_user['user']['pk'] and \
+                   post['id'] not in next_top_user['posts_liked']:
+
+                    self.like_posts(post['id'], next_top_user)
+                    next_top_user['posts_liked'].append(post['id'])
+
+
+            if self._all_posts_liked(posts):
                 return print("Bot finished playing around! :)")
 
-            while len(max_posts_user.get('posts_liked')) <= self.max_likes_per_user:
-                random_post = random.choice(posts)
-                if random_post['user'] != max_posts_user['user']['pk'] and \
-                   random_post['id'] not in max_posts_user['posts_liked'] and \
-                    self._no_likes_check(posts=posts, post_owner=random_post['user']):
-
-                    self.like_posts(random_post['id'], max_posts_user)
-                    max_posts_user['posts_liked'].append(random_post['id'])
-
-            pass
+            if not posting_users:
+                return print("No more users! :o")
