@@ -1,7 +1,13 @@
 # social-network
 Django REST API based social network
 
-Endpoints:
+# you can run app from docker:
+
+    - Build and create docker image: make create-social
+    - Start app: make start-social
+    - Run migrations: make migrate-social
+
+# Endpoints:
 
     - signup:
         /sign-up/
@@ -44,3 +50,5 @@ Endpoints:
 # Bot usage:
 - python manage.py bot --data json_file_path
 - there is example data in /social_bot/data/
+- If you are using app from docker then run:
+    - sudo docker exec -it social-network python manage.py bot --data /social-network/social_bot/data/data.json

@@ -30,7 +30,7 @@ SECRET_KEY = 'qtx#a#()ic%_s@azb8%p+m!vm6hmxw8#c)p7@^xgmcxx6m2tg$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 #User settings
 AUTH_USER_MODEL = 'social.SocialUser'
@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'PASSWORD': 'social',
-        'HOST': 'localhost',
+        'HOST': 'db' ,
         'USER': 'social',
         'PORT': '5432',
     },
