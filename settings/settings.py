@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'PASSWORD': 'social',
-        'HOST': 'db' ,
+        'HOST': os.getenv('SOCIAL_DB_HOST','localhost'),
         'USER': 'social',
         'PORT': '5432',
     },
