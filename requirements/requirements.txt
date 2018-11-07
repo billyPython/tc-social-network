@@ -11,7 +11,7 @@ psycopg2==2.7.3.2
 pyhunter==0.3
 PyJWT==1.5.3
 pytz==2018.3
-requests==2.18.4
+requests==2.20.0
 six==1.11.0
 urllib3==1.22
 username-generator==2.0.0
