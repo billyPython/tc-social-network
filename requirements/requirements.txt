@@ -13,6 +13,6 @@ PyJWT==1.5.3
 pytz==2018.3
 requests==2.20.0
 six==1.11.0
-urllib3==1.22
+urllib3==1.26.5
 username-generator==2.0.0
 gunicorn
